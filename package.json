@@ -44,7 +44,7 @@
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
-    "test:cov": "jest --ci --coverage --testLocationInResults",
+    "test:cov": "jest --coverage --testLocationInResults",
     "test:failures": "jest --onlyFailures"
   },
   "eslintConfig": {

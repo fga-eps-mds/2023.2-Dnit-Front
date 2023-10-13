@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Test and coverage
-        run: npm run test:cov
+        run: npm run test:cov --maxWorkers=2 --runInBand
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
