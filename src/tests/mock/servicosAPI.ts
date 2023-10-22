@@ -1,6 +1,6 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { listarUsuarioPermissoes, urlAPIEscolas, urlAPIUps } from "../../consts/service";
+import { atualizarTokenUrl, listarUsuarioPermissoes, urlAPIEscolas, urlAPIUps } from "../../consts/service";
 import { Permissao } from "../../models/auth";
 
 const escolasService = urlAPIEscolas;
@@ -10,6 +10,11 @@ const server = setupServer(
   rest.get(
     listarUsuarioPermissoes,
     (_, res, ctx) => res(ctx.json(Object.values(Permissao))),
+  ),
+  rest.post(
+    atualizarTokenUrl,
+    (_, res, ctx) => res(
+      ctx.json({token: "token", tokenAtualizacao: "token atualizacao", expiraEm: new Date().toISOString(), permissoes: [Permissao.EscolaCadastrar]})),
   ),
   rest.get(
    `${escolasService}/escolas/obter`,

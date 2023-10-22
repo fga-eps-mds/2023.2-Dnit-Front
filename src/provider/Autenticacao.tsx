@@ -39,7 +39,19 @@ export function setPermissoes(permissoes: Permissao[]) {
   localStorage.setItem(AuthLocalStorage.Permissoes, permissoes?.join(PERMISSOES_SEPARATOR) ?? "");
 }
 
-function salvarLogin(dados: LoginResponse) {
+export function getPermissoes() {
+  return (localStorage.getItem(AuthLocalStorage.Permissoes)?.split(PERMISSOES_SEPARATOR) ?? []) as Permissao[];
+}
+
+export function temPermissao(permissao: Permissao) {
+  const temPermissaoSolicitada = getPermissoes().includes(permissao);
+  if (!temPermissaoSolicitada) {
+    console.error(`O usuário não tem a permissao ${permissao}. Permissões do usuário: ${getPermissoes()}`);
+  }
+  return temPermissaoSolicitada;
+};
+
+export function salvarLogin(dados: LoginResponse) {
   localStorage.setItem(AuthLocalStorage.Token, dados.token);
   localStorage.setItem(AuthLocalStorage.TokenAtualizacao, dados.tokenAtualizacao);
   localStorage.setItem(AuthLocalStorage.ExpiraEm, dados.expiraEm);
@@ -47,12 +59,12 @@ function salvarLogin(dados: LoginResponse) {
   setApiToken(dados.token);
 }
 
-function removerLogin() {
+export function removerLogin() {
   Object.values(AuthLocalStorage).forEach(a => localStorage.removeItem(a));
   setApiToken(null);
 }
 
-async function atualizarToken() {
+export async function atualizarToken() {
   const dados: AtualizarTokenDto = {
     token: localStorage.getItem(AuthLocalStorage.Token) ?? "",
     tokenAtualizacao: localStorage.getItem(AuthLocalStorage.TokenAtualizacao) ?? "",
@@ -102,18 +114,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     removerLogin();
-  };
-
-  const getPermissoes = () => {
-    return (localStorage.getItem(AuthLocalStorage.Permissoes)?.split(PERMISSOES_SEPARATOR) ?? []) as Permissao[];
-  }
-
-  const temPermissao = (permissao: Permissao) => {
-    const temPermissaoSolicitada = getPermissoes().includes(permissao);
-    if (!temPermissaoSolicitada) {
-      console.error(`O usuário não tem a permissao ${permissao}. Permissões do usuário: ${getPermissoes()}`);
-    }
-    return temPermissaoSolicitada;
   };
 
   return (
