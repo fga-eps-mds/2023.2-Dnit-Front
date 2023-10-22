@@ -18,7 +18,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("Remover situação escola", async () => {
-  localStorage.setItem("login", "authenticated");
+  autenticar(Permissao.EscolaVisualizar, Permissao.EscolaEditar);
 
   render(
     <MemoryRouter initialEntries={["/escolas-cadastradas"]}>

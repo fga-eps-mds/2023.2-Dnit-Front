@@ -41,7 +41,7 @@ test("Exibir escola selecionada", async () => {
 });
 
 test("Alterar escola selecionada", async () => {
-  autenticar(Permissao.EscolaEditar);
+  autenticar(Permissao.EscolaEditar, Permissao.EscolaVisualizar);
 
   render(
     <MemoryRouter initialEntries={["/escolas-cadastradas"]}>
@@ -97,7 +97,7 @@ test("Alterar escola selecionada", async () => {
 });
 
 test("Alterar escola selecionada erro", async () => {
-  autenticar(Permissao.EscolaEditar);
+  autenticar(Permissao.EscolaEditar, Permissao.EscolaVisualizar);
 
   server.use(
     rest.put(

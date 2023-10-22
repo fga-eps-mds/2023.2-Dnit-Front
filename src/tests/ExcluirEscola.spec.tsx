@@ -18,7 +18,7 @@ afterAll(() => server.close());
 const escolasService = "https://escola.dnit.eps-fga.live/api"
 
 test("Modal de excluir escola exibida corretamente", async () => {
-  autenticar(Permissao.EscolaRemover);
+  autenticar(Permissao.EscolaRemover, Permissao.EscolaVisualizar);
 
   render(
     <MemoryRouter initialEntries={["/escolas-cadastradas"]}>
@@ -44,7 +44,7 @@ test("Modal de excluir escola exibida corretamente", async () => {
 });
 
 test("Modal de excluir escola exibida erro", async () => {
-  autenticar(Permissao.EscolaRemover);
+  autenticar(Permissao.EscolaRemover, Permissao.EscolaVisualizar);
 
   server.use(
     rest.delete(

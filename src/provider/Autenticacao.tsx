@@ -109,8 +109,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const temPermissao = (permissao: Permissao) => {
-    console.error("aaaaa", getPermissoes().includes(permissao), permissao, getPermissoes());
-    return getPermissoes().includes(permissao);
+    const temPermissaoSolicitada = getPermissoes().includes(permissao);
+    if (!temPermissaoSolicitada) {
+      console.error(`O usuário não tem a permissao ${permissao}. Permissões do usuário: ${getPermissoes()}`);
+    }
+    return temPermissaoSolicitada;
   };
 
   return (

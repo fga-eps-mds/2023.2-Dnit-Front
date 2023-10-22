@@ -64,7 +64,7 @@ test("Cadastro CSV", async () => {
 });
 
 test("Cadastro CSV erro", async () => {
-  autenticar(Permissao.RodoviaCadastrar);
+  autenticar(Permissao.SinistroCadastrar);
 
   server.use(
     rest.post(
@@ -98,7 +98,7 @@ test("Cadastro CSV erro", async () => {
 });
 
 test("Cadastro CSV vazio", async () => {
-  autenticar(Permissao.RodoviaCadastrar);
+  autenticar(Permissao.SinistroCadastrar);
 
   server.use(
     rest.post(
@@ -129,7 +129,7 @@ test("Cadastro CSV vazio", async () => {
 });
 
 test("Cadastro sem enviar CSV", async () => {
-  autenticar(Permissao.RodoviaCadastrar);
+  autenticar(Permissao.SinistroCadastrar);
 
   server.use(
     rest.post(
