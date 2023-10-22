@@ -26,7 +26,7 @@ jobs:
           REACT_APP_API_USUARIOS: https://usuario.dnit.eps-fga.live
           REACT_APP_API_ESCOLAS: https://escola.dnit.eps-fga.live
           REACT_APP_API_UPS: https://up.dnit.eps-fga.live
-        run: npm run test:cov
+        run: npm run test:cov -- --silent
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
