@@ -38,6 +38,21 @@ test("Visualizar Escolas", async () => {
   fireEvent.click(escolas);
 });
 
+test("Visualizar Escolas Sem Permissão", async () => {
+  autenticar();
+
+  const screen = render(
+    <MemoryRouter initialEntries={["/dashboard"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+
+  const botao = await screen.queryByText("Visualizar Escolas");
+  expect(botao).toBeNull();
+});
+
 test("Visualizar Dados UPS", async () => {
   autenticar(Permissao.UpsVisualizar);
 
@@ -51,6 +66,21 @@ test("Visualizar Dados UPS", async () => {
 
   const ups = screen.getByText("Visualizar Dados UPS");
   fireEvent.click(ups);
+});
+
+test("Visualizar Dados UPS Sem Permissão", async () => {
+  autenticar();
+
+  const screen = render(
+    <MemoryRouter initialEntries={["/dashboard"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+
+  const botao = await screen.queryByText("Visualizar Dados UPS");
+  expect(botao).toBeNull();
 });
 
 test("Cadastrar Escolas", async () => {
@@ -68,6 +98,21 @@ test("Cadastrar Escolas", async () => {
   fireEvent.click(escolas);
 });
 
+test("Cadastrar Escolas Sem Permissão", async () => {
+  autenticar();
+
+  const screen = render(
+    <MemoryRouter initialEntries={["/dashboard"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+
+  const botao = await screen.queryByText("Cadastrar Escolas");
+  expect(botao).toBeNull();
+});
+
 test("Adicionar Sinistros", async () => {
   autenticar(Permissao.SinistroCadastrar);
 
@@ -83,6 +128,21 @@ test("Adicionar Sinistros", async () => {
   fireEvent.click(sinistros);
 });
 
+test("Adicionar Sinistros Sem Permissão", async () => {
+  autenticar();
+
+  const screen = render(
+    <MemoryRouter initialEntries={["/dashboard"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+
+  const botao = await screen.queryByText("Adicionar Sinistros");
+  expect(botao).toBeNull();
+});
+
 test("Adicionar Rodovias", async () => {
   autenticar(Permissao.RodoviaCadastrar);
 
@@ -96,4 +156,19 @@ test("Adicionar Rodovias", async () => {
 
   const rodovias = screen.getByText("Adicionar Rodovias");
   fireEvent.click(rodovias);
+});
+
+test("Adicionar Rodovias Sem Permissão", async () => {
+  autenticar();
+
+  const screen = render(
+    <MemoryRouter initialEntries={["/dashboard"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+
+  const botao = await screen.queryByText("Adicionar Rodovias");
+  expect(botao).toBeNull();
 });

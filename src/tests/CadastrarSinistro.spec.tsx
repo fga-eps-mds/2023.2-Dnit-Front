@@ -155,3 +155,18 @@ test("Cadastro sem enviar CSV", async () => {
   const cancelar = screen.getByText("Cancelar");
   fireEvent.click(cancelar);
 });
+
+test("Cadastro Sinistro Sem Permissão", async () => {
+  autenticar();
+
+  render(
+    <MemoryRouter initialEntries={["/cadastrarsinistros"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+
+  const botao = await screen.queryByText("Enviar arquivo");
+  expect(botao).toBeNull();
+});

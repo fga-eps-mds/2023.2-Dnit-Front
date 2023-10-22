@@ -33,8 +33,7 @@ window.matchMedia = jest.fn().mockImplementation((query) => {
 const upsService = `${process.env.REACT_APP_API_UPS}/api`
 
 test("Cadastro via CSV", async () => {
-    autenticar(Permissao.RodoviaCadastrar);
-
+  autenticar(Permissao.RodoviaCadastrar);
 
   server.use(
     rest.post(
@@ -69,13 +68,27 @@ test("Cadastro via CSV", async () => {
   fireEvent.click(botaoConcluir);
 });
 
+test("Cadastro Sem Permissão", async () => {
+  autenticar();
+
+  render(
+    <MemoryRouter initialEntries={["/cadastrarRodovias"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+  const botao = await screen.queryByText("Concluir");
+  expect(botao).toBeNull();
+});
+
 test("Cadastro CSV erro", async () => {
-    autenticar(Permissao.RodoviaCadastrar);
+  autenticar(Permissao.RodoviaCadastrar);
 
 
   server.use(
     rest.post(
-       `${upsService}/rodovia/cadastrarRodoviaPlanilha`,
+      `${upsService}/rodovia/cadastrarRodoviaPlanilha`,
       (req, res, ctx) => {
         return res(ctx.status(406));
       }
@@ -106,7 +119,7 @@ test("Cadastro CSV erro", async () => {
 });
 
 test("Cadastro CSV vazio", async () => {
-    autenticar(Permissao.RodoviaCadastrar);
+  autenticar(Permissao.RodoviaCadastrar);
 
 
   server.use(
@@ -138,7 +151,7 @@ test("Cadastro CSV vazio", async () => {
 });
 
 test("Cadastro sem enviar CSV", async () => {
-    autenticar(Permissao.RodoviaCadastrar);
+  autenticar(Permissao.RodoviaCadastrar);
 
 
   server.use(

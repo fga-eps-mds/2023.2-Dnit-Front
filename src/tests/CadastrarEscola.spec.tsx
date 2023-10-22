@@ -98,6 +98,20 @@ test("Cadastro feito", async () => {
   fireEvent.click(cadastrar);
 });
 
+test("Cadastro Sem Permissão", async () => {
+  autenticar();
+
+  render(
+    <MemoryRouter initialEntries={["/cadastrarescola"]}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+  const cadastrar = await screen.queryByText("Cadastrar");
+  expect(cadastrar).toBeNull();
+});
+
 test("Cadastro feito sem latitude e longitude", async () => {
   autenticar(Permissao.EscolaCadastrar);
 

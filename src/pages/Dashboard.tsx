@@ -21,11 +21,11 @@ export default function Dashboard() {
 
   const { temPermissao, setPermissoes } = useContext(AuthContext);
 
-  const [podeVisualizarEscola, setPodeVisualizarEscola] = useState(false);
-  const [podeVisualizarUps, setPodeVisualizarUps] = useState(false);
-  const [podeCadastrarEscola, setPodeCadastrarEscola] = useState(false);
-  const [podeCadastrarSinistro, setPodeCadastrarSinistro] = useState(false);
-  const [podeCadastrarRodovias, setPodeCadastrarRodovias] = useState(false);
+  const [podeVisualizarEscola, setPodeVisualizarEscola] = useState(temPermissao(Permissao.EscolaVisualizar));
+  const [podeVisualizarUps, setPodeVisualizarUps] = useState(temPermissao(Permissao.UpsVisualizar));
+  const [podeCadastrarEscola, setPodeCadastrarEscola] = useState(temPermissao(Permissao.EscolaCadastrar));
+  const [podeCadastrarSinistro, setPodeCadastrarSinistro] = useState(temPermissao(Permissao.SinistroCadastrar));
+  const [podeCadastrarRodovias, setPodeCadastrarRodovias] = useState(temPermissao(Permissao.RodoviaCadastrar));
 
   useEffect(() => {
     fetchPermissoesDoUsuario().then(permissoes => {
