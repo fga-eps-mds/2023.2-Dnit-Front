@@ -3,4 +3,32 @@
         max-height: 90svh;
     }
   }
-  
+
+.adicionar-usuario-empresa .usuarios-selecionados {
+    padding-left: 20px;
+}
+
+.adicionar-usuario-empresa ul {
+    width: 400px;
+    padding-left: 20px;
+    overflow-y: auto;
+    min-height: 250px;
+    height: 100%;
+}
+
+.adicionar-usuario-empresa ul::-webkit-scrollbar {
+    height: var(--spacing-scale-base);
+    width: var(--spacing-scale-base);
+}
+
+.adicionar-usuario-empresa ul li {
+    list-style-type: none;
+    padding: 10px;
+    border: 1px gray solid;
+    display: flex;
+    justify-content: space-between;
+}
+
+.adicionar-usuario-empresa .br-modal-body .br-select {
+    max-height: 100px;
+}

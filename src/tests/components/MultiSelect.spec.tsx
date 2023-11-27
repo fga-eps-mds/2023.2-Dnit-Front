@@ -125,13 +125,36 @@ describe("Testes para o componente MultiSelect", () => {
                 filtrarTodos={true}
             />
         )
-
+            
         act(() => {
             screen.getByTestId("MultiSelectcustomSelect").click()
         })
 
         const item = screen.getByTestId("cbs0")
         await waitFor(expect(item).toBeInTheDocument)
+        act(() => {
+            item.click()
+        })
+    })
+
+    it("Deve abrir o dropdown e clicar em todos para deselecionar", async () => {
+        const screen = render(
+            <MultiSelect 
+                items={testItems}
+                onChange={(_id) => {}}
+                value={[testItems[0].id, testItems[1].id, testItems[2].id, testItems[3].id]}
+                label="MultiSelect"
+                filtrarTodos={true}
+            />
+        )
+            
+        act(() => {
+            screen.getByTestId("MultiSelectcustomSelect").click()
+        })
+
+        const item = screen.getByTestId("cbs0")
+        await waitFor(expect(item).toBeInTheDocument)
+
         act(() => {
             item.click()
         })

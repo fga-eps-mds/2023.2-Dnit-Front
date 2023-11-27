@@ -64,4 +64,14 @@
   width: 450px;
 }
 
+.erro {
+  color: red;
+	font-size: 0.8rem;
+}
+
+.required-label:after {
+  content: " *";
+  color: red;
+}
+
 /*# sourceMappingURL=select.css.map*/

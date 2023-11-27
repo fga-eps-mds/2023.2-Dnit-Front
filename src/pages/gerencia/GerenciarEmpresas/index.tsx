@@ -31,7 +31,7 @@ export default function GerenciarEmpresas() {
 	const [showDeleteEmpresa, setShowDeleteEmpresa] = useState<DeletarEmpresaDialogArgs | null>(null);
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
-	const [UFs, setUFs] = useState<string[]>(['']);
+	const [UFs, setUFs] = useState<string[]>([]);
 	const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
 	const [tamanhoPagina, setTamanhoPagina] = useState(pagina.itemsPorPagina);
 	const [notificationApi, notificationContextHandler] = notification.useNotification();
@@ -97,13 +97,14 @@ export default function GerenciarEmpresas() {
 				<div className="d-flex justify-content-left align-items-center mr-5">
         			<InputFilter onChange={setRazaoSocial} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" />
 					<InputFilter onChange={setCnpj} dataTestId="filtroCnpj" label="CNPJ" placeholder="CNPJ" />
-					<MultiSelect items={listaUfs} value={UFs} label={"UF:"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+					<MultiSelect items={listaUfs} value={UFs} label={"UFs. de atuação:"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos
+						definePlaceholder="UFs. de Atuação" />
 					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Empresa" buttonStyle="primary" onClick={() => setShowEmpresa({ id: null, readOnly: false })}></ButtonComponent>}
         		</div>
 				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
 				<Table 
 					title="Empresas Cadastradas"
-					columsTitle={["Razão Social", "CNPJ", "UFs"]}
+					columsTitle={["Razão Social", "CNPJ", "UFs. de atuação"]}
 					totalPages={pagina.totalPaginas}
 					totalItems={pagina.total}
 					initialItemsPerPage={pagina.itemsPorPagina}
@@ -126,7 +127,8 @@ export default function GerenciarEmpresas() {
 						listaEmpresas.map((empresa, index) => (
 							<CustomTableRow 
 								key={`${empresa.cnpj}`} id={index}
-								data={{'0': empresa.razaoSocial, '1': formatCnpj(empresa.cnpj), '2': empresa.uFs.map((e) => e.sigla).join(', ')}}
+								data={{'0': empresa.razaoSocial, '1': formatCnpj(empresa.cnpj), 
+									'2': empresa.uFs.length === 27 ? "Todas" : empresa.uFs.map((e) => e.sigla).join(', ')}}
 								onEditRow={() => {
 									// setEmpresaSelecionada(empresa.Cnpj)
 									setShowEmpresa({id: empresa.cnpj, readOnly: false})

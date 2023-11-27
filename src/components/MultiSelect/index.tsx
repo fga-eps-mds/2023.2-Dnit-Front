@@ -18,11 +18,15 @@ interface MultiSelectProps {
   readonly filtrarTodos?: boolean;
   readonly definePlaceholder?: string;
   readonly readOnly?: boolean;
+  readonly errorMessage?: string;
+  readonly required?: boolean;
 }
 
-export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, labelStyle, filtrarTodos, definePlaceholder, readOnly}: MultiSelectProps) {
+export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, labelStyle, 
+    filtrarTodos, definePlaceholder, readOnly, errorMessage, required }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [novaLista, setNovaLista] = useState<MultiSelectOptions[]>([]);
+  const checkAll: boolean = items.length === value.length;
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -33,15 +37,16 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
   }
 
   const handleItemClick = (itemId: string) => {
-    const all = value.findIndex(id => id === "");
     if (itemId === "") {
-      if (all !== -1) onChange([]);
-      else onChange([""]);
+      if (checkAll) {
+        onChange([]);
+      }
+      else {
+        onChange(items.map(item => item.id));
+      }
     }
     else
     {
-      if (all !== -1) value = novaLista.filter(item => item.id !== "").map(item => item.id);
-
       onChange(itemIsSelected(itemId) ? 
         value.filter((id) => id !== itemId)
         : [...value, itemId]
@@ -49,19 +54,20 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
     }
   };
 
-  const getRotulos = (ids: string[], items: MultiSelectOptions[]) => {
-    const rotulos = items.filter(item => ids.includes(item.id)).map(item => item.rotulo);
+  const getRotulos = (ids: string[], lista: MultiSelectOptions[]) => {
+    if (checkAll) return ["Todos"];
+    const rotulos = lista.filter(item => ids.includes(item.id)).map(item => item.rotulo);
     return rotulos;
   }
 
   useEffect(() => {
-
     if (filtrarTodos) { 
       const concatLista = [{ id: "", rotulo: "Todos" }].concat(items); 
       setNovaLista(concatLista);
     }
-    else
+    else {
       setNovaLista(items);
+    }
   }, [items])
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -83,20 +89,24 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
   return (
     <div ref={wrapperRef} className="profile-type-select br-select" style={{ flexBasis: "90%" }}>
       <div className="br-input ">
-        <label className="profile-type-label ml-2" style={labelStyle} htmlFor="select-multtiple">{label}</label>
+        <label className={`profile-type-label ml-2 ${required ? "required-label" : ""}`} style={labelStyle} htmlFor="select-multtiple">{label}</label>
         <div className="br-input large input-button">
           <input id="select-multtiple" type="text" placeholder={definePlaceholder} value={getRotulos(value, novaLista).join(', ')} style={inputStyle} readOnly={readOnly} />
           {!readOnly && <button data-testid={`${label}customSelect`} className="br-button" type="button" aria-label="Exibir lista" tabIndex={-1} data-trigger="data-trigger" onClick={toggleDropdown} style={buttonStyle}>
             <i className="fas fa-angle-down" aria-hidden="true"></i>
           </button>}
         </div>
+        {errorMessage &&
+        <div className="erro">
+            <p>{errorMessage}</p>
+        </div>}
       </div>
       {isOpen &&
         <div className="br-list2" style={dropdownStyle} tabIndex={0}>
           {novaLista.map((item, index) => (
-            <div key={index} className="br-item" tabIndex={-1} data-all="data-all" onKeyDown={() => { }}>
+            <div key={index} className="br-item" tabIndex={-1}>
               <div className="br-checkbox">
-                <input id={`cbs${index}`} data-testid={`cbs${index}`} type="checkbox" name="estados-multtiple" value={item.rotulo} checked={itemIsSelected("") || itemIsSelected(item.id)} 
+                <input id={`cbs${index}`} data-testid={`cbs${index}`} type="checkbox" name="estados-multtiple" value={item.rotulo} checked={checkAll || itemIsSelected(item.id)} 
                   onClick={() => handleItemClick(item.id)} onChange={() => { }} />
                 <label htmlFor={`cbs${index}`}>{item.rotulo}</label>
               </div>

@@ -37,7 +37,7 @@ function Ranque() {
   const paginas = [{ nome: "Logout", link: "/login" }];
   const [loading, setLoading] = useState(true);
   const [escolas, setEscolas] = useState<ListaPaginada<EscolaRanqueData> | null>(null);
-  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Superintendência', 'Custo Logístico'];
+  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'Cidade polo mais próxima', 'Custo Logístico'];
 
   const [paginacao, setPaginacao] = useState({pagina: 1, tamanhoPagina: 10,});
   const [notificationApi, notificationContextHandler] = notification.useNotification();

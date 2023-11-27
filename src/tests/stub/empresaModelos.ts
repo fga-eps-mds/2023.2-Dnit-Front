@@ -2,7 +2,7 @@ import { EmpresaModel } from "../../models/empresa";
 
 export const empresas: EmpresaModel[] = [
     {
-        cnpj: "01255734000184",
+        cnpj: "74953570000132",
         razaoSocial: "Empresa A",
         uFs: [
             {
@@ -13,7 +13,7 @@ export const empresas: EmpresaModel[] = [
         ]
     },
     {
-        cnpj: "32296737000190",
+        cnpj: "10120718000175",
         razaoSocial: "Empresa B",
         uFs: [
             {

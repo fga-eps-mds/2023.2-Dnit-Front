@@ -25,7 +25,7 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
         .catch((error) => {
             notification.error({
               message:
-                "Falha na exclusão do perfil. " + (error?.response?.data ?? ""),
+                "Falha na exclusão da empresa. " + (error?.response?.data ?? ""),
             });
           })
     }

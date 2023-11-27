@@ -34,8 +34,10 @@ const obterEmpresaRequest = rest.get(
     `${visualizarEmpresaUrl}/:cnpj`,
     (req, res, ctx) => {
         const { cnpj } = req.params
-        let empresa = empresas[0]
-        empresa.cnpj = cnpj[0]
+        let empresa = {
+            ...empresas[0],
+            cnpj: cnpj
+        }
         console.log(empresa)
         return res(
             ctx.status(200),
@@ -50,8 +52,19 @@ const deletarEmpresaRequest = rest.delete(
 );
 
 const editarEmpresaRequest = rest.put(
-    editarEmpresaUrl,
-    (_req, res, ctx) => res(ctx.status(200))
+    `${editarEmpresaUrl}/:cnpj`,
+    (_req, res, ctx) => {
+        const { cnpj } = _req.params
+        let empresa = {
+            ...empresas[0],
+            cnpj: cnpj
+        }
+        console.log(empresa)
+        return res(
+            ctx.status(200),
+            ctx.json(empresa)
+        )
+    }
 )
 
 const listarUsuariosEmpresa = rest.get(

@@ -4,7 +4,7 @@ import { UsuarioModel } from "../../../models/usuario";
 import Header from "../../../components/Header";
 import Table, { CustomTableRow } from "../../../components/Table";
 import Footer from "../../../components/Footer";
-import { fetchUsuariosEmpresa } from "../../../service/empresaApi";
+import { fetchEmpresa, fetchUsuariosEmpresa } from "../../../service/empresaApi";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import InputFilter from "../../../components/InputFilter";
 import ReactLoading from "react-loading";
@@ -21,7 +21,6 @@ import AdicionarUsuarioDialog from "../../../components/AdicionarUsuarioDialog";
 
 interface RemoverUsuarioEmpresaArgs {
   cnpj: string | undefined;
-  nomeEmpresa: string | undefined;
   nomeUsuario: string;
   usuarioId: string;
 }
@@ -38,6 +37,7 @@ export default function GerenciarUsuariosEmpresa() {
     const [loading, setLoading] = useState(false);
     const [showRemover, setShowRemover] = useState<RemoverUsuarioEmpresaArgs | null>(null);
     const [showAdicionar, setShowAdicionar] = useState<AdicionarUsuarioEmpresaArgs | null>(null);
+    const [nomeEmpresa, setNomeEmpresa] = useState('');
     const [listaUsuarios, setListaUsuarios] = useState<UsuarioModel[]>([]);
     const [nome, setNome] = useState('');
     const [uf, setUf] = useState('');
@@ -48,18 +48,18 @@ export default function GerenciarUsuariosEmpresa() {
     const tamanhoPagina = 20;
     
     const buscarUsuariosEmpresa = () => {
-        setLoading(true);
-        
         if (cnpj) {
+            setLoading(true);
             fetchUsuariosEmpresa(cnpj, {pagina: 1, itemsPorPagina: tamanhoPagina, nome: nome, ufLotacao: uf, perfilId: perfil})
             .then(u => setListaUsuarios(u.items))
             .catch(error => notificationApi.error({ message: 'Falha na listagem de usuários. ' + (error?.response?.data || '') }))
             .finally(() => setLoading(false));
         }
-        else
-        {
-            setLoading(false);
-        }
+    }
+
+    async function buscarEmpresa(cnpj : string) {
+        const empresa = await fetchEmpresa(cnpj);
+        setNomeEmpresa(empresa.razaoSocial);
     }
 
     async function fetchUf(): Promise<void> {
@@ -91,12 +91,18 @@ export default function GerenciarUsuariosEmpresa() {
       fetchPerfil(1, 100, '');
     }, []);
 
+    useEffect(() => {
+      if (cnpj) {
+        buscarEmpresa(cnpj);
+      }
+    }, []);
+
     return (
         <div className="App">
           {notificationContextHandler}
           {showRemover && <RemoverUsuarioEmpresaDialog cnpj={showRemover.cnpj} usuarioid={showRemover.usuarioId} 
-            nomeEmpresa={showRemover.nomeEmpresa} nomeUsuario={showRemover.nomeUsuario} closeDialog={(removed) => {setShowRemover(null); onUsuarioChange(removed)}}/>}
-          {showAdicionar && <AdicionarUsuarioDialog cnpj={showAdicionar.cnpj} closeDialog={(added) => {setShowAdicionar(null); onUsuarioChange(added)}}/>}
+            nomeEmpresa={nomeEmpresa} nomeUsuario={showRemover.nomeUsuario} closeDialog={(removed) => {setShowRemover(null); onUsuarioChange(removed)}}/>}
+            {showAdicionar && <AdicionarUsuarioDialog cnpj={showAdicionar.cnpj} nomeEmpresa={nomeEmpresa} closeDialog={(added) => {setShowAdicionar(null); onUsuarioChange(added)}}/>}
           <Header />
           <TrilhaDeNavegacao elementosLi={paginas} />
           <div className="d-flex flex-column m-5">
@@ -117,7 +123,7 @@ export default function GerenciarUsuariosEmpresa() {
                     hideEyeIcon={true}
                     hideTrashIcon={!temPermissao(Permissao.EmpresaGerenciarUsuarios)}
                     onDeleteRow={() => setShowRemover({
-                      cnpj: cnpj, nomeEmpresa: usuario.empresa?.razaoSocial, nomeUsuario: usuario.nome, usuarioId: usuario.id
+                      cnpj: cnpj, nomeUsuario: usuario.nome, usuarioId: usuario.id
                     })}
                     />
                 )

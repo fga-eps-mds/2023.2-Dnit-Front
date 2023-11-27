@@ -53,6 +53,7 @@ describe("Gerenciar Empresas", () => {
         const input = screen.getByTestId("inputRazaoSocial")
         const buttonConfirmar = screen.getByTestId("botaoConfirmar")
         await waitFor(() => expect(input).toBeInTheDocument)
+        await waitFor(() => expect(screen.getByDisplayValue("74.953.570/0001-32")).toBeInTheDocument)
 
         act(() => {
             fireEvent.change(input, {
@@ -154,16 +155,65 @@ describe("Gerenciar Empresas", () => {
         const overlay = screen.getByTestId("overlay")
         const inputRazaoSocial = screen.getByTestId("inputRazaoSocial")
         const inputCnpj = screen.getByTestId("inputCnpj")
+        const inputUFs = screen.getByTestId("UFs. de atuaçãocustomSelect")
         const buttonConfirmar = screen.getByTestId("botaoConfirmar")
 
         await waitFor(() => expect(overlay).toBeInTheDocument)
         await waitFor(() => expect(inputRazaoSocial).toBeInTheDocument)
         await waitFor(() => expect(inputCnpj).toBeInTheDocument)
+        await waitFor(() => expect(inputUFs).toBeInTheDocument)
         await waitFor(() => expect(buttonConfirmar).toBeInTheDocument)
 
         act(() => {
             fireEvent.change(inputRazaoSocial, {target: {value: "Empresa Z"}})
-            fireEvent.change(inputCnpj, {target: {value: "22347531245678"}})
+            fireEvent.change(inputCnpj, {target: {value: "53616171000106"}})
+            fireEvent.click(inputUFs)
+        })
+
+        await waitFor(() => expect(screen.getByTestId("cbs1")).toBeInTheDocument)
+
+        act(() => {
+            screen.getByTestId("cbs1").click()
+            buttonConfirmar.click()
+        })
+    })
+
+    it("Não deve cadastrar nova empresa", async () => {
+        autenticar(Permissao.EmpresaVisualizar, Permissao.EmpresaCadastrar);
+
+        const screen = setup()
+
+        const button = screen.getByText("Cadastrar Empresa")
+        await waitFor(() => expect(button).toBeInTheDocument)
+        
+        act(() => {
+            button.click()
+        })
+        
+        const overlay = screen.getByTestId("overlay")
+        const inputRazaoSocial = screen.getByTestId("inputRazaoSocial")
+        const inputCnpj = screen.getByTestId("inputCnpj")
+        const inputUFs = screen.getByTestId("UFs. de atuaçãocustomSelect")
+        const buttonConfirmar = screen.getByTestId("botaoConfirmar")
+
+        await waitFor(() => expect(overlay).toBeInTheDocument)
+        await waitFor(() => expect(inputRazaoSocial).toBeInTheDocument)
+        await waitFor(() => expect(inputCnpj).toBeInTheDocument)
+        await waitFor(() => expect(inputUFs).toBeInTheDocument)
+        await waitFor(() => expect(buttonConfirmar).toBeInTheDocument)
+
+        act(() => {
+            fireEvent.change(inputRazaoSocial, {target: {value: ""}})
+            fireEvent.change(inputCnpj, {target: {value: "53616171000107"}})
+            buttonConfirmar.click()
+        })
+
+        act(() => {
+            fireEvent.change(inputCnpj, {target: {value: ""}})
+            buttonConfirmar.click()
+            fireEvent.change(inputCnpj, {target: {value: "5551"}})
+            buttonConfirmar.click()
+            fireEvent.change(inputCnpj, {target: {value: "55555555555555"}})
             buttonConfirmar.click()
         })
     })
@@ -173,9 +223,9 @@ describe("Gerenciar Empresas", () => {
 
         const screen = setup()
 
-        await waitFor(() => expect(screen.getByText('Empresa A')).toBeInTheDocument);
+        await waitFor(() => expect(screen.getByText('Empresa B')).toBeInTheDocument);
 
-        const deleteIcon = screen.getByTestId("table-row-delete-0")
+        const deleteIcon = screen.getByTestId("table-row-delete-1")
         await waitFor(() => expect(deleteIcon).toBeInTheDocument)
 
         act(() => {

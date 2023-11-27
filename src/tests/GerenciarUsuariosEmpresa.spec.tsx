@@ -62,7 +62,7 @@ describe("Gerenciar usuários de empresa", () => {
         })
 
         await waitFor(() => expect(screen.getByTestId("overlay")))
-        const select = screen.getByTestId("UsuárioscustomSelect")
+        const select = screen.getByTestId("Selecionar UsuárioscustomSelect")
         const selectFirstItem = document.querySelector("#rb0")
 
         act(() => {

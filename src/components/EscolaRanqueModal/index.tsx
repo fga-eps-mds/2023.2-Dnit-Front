@@ -118,7 +118,8 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                     </div>
                     <hr />
                     <div className='d-flex flex-column '>
-                        <Label><strong>Superintendência</strong></Label>
+                        {/* <Label><strong>Superintendência</strong></Label> */}
+                        <Label><strong>Cidade polo mais próxima</strong></Label>
                         <Label>Distância: {escolaSelecionada.distanciaSuperintendencia?.toFixed(2)} Km</Label>
                         <Label>Endereço: {superintendenciaSelecionada?.endereco}</Label>
                         <Label>Cep: {superintendenciaSelecionada?.cep}</Label>
