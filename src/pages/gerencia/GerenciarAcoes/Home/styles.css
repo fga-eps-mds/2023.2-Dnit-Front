@@ -1,0 +1,10 @@
+.filters-row {
+    display: flex;
+    align-items: center;
+    height: 6.25rem;
+}
+
+.new-planning-button {
+    margin-top: 1.5625rem;
+    margin-left: 15%;
+}

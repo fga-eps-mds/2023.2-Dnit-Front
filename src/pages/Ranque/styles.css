@@ -50,3 +50,9 @@
     margin-top: -300px;
   }
 }
+
+.right-aligned-button {
+  float: right; /* alinhamento à direita */
+  width: auto; /* largura automática (não ocupará a largura total) */
+  margin-right: 20px; /* margem direita para espaçamento */
+}

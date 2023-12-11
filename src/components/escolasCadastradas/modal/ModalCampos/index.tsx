@@ -1,11 +1,13 @@
 import { Select } from "antd";
 import {ChangeEvent, useEffect, useState} from "react";
 import { useSelectedValue } from "../../../../context/Situacao";
-import {EscolaData, SituacaoData, Superintendencia} from "../../../../models/service";
-import {fetchSituacao, fetchSuperintendenciaData} from "../../../../service/escolaApi";
+import {EscolaData, SituacaoData} from "../../../../models/service";
+import {fetchSituacao} from "../../../../service/escolaApi";
 import {fetchEtapasDeEnsino} from "../../../../service/escolaApi";
 import MenuSuspenso from "../../MenuSuspenso";
 import {formataCustoLogistico} from "../../../../utils/utils";
+import { fetchPolo } from "../../../../service/poloApi";
+import { PoloModel } from "../../../../models/polo";
 
 interface ModalCamposEscolaProps {
   data: EscolaData;
@@ -44,13 +46,13 @@ const ModalCampos = ({
 
   const ultimaAtualizacao = new Date();
  
-  const [superintendenciaSelecionada, setSuperintendenciaSelecionada] = useState<Superintendencia | undefined>();
-  const fetchSuperintendenciaSelecionada = async () => {
-    const superintendencia = await fetchSuperintendenciaData(data.superintendenciaId);
-    setSuperintendenciaSelecionada(superintendencia);
+  const [poloSelecionado, setPoloSelecionado] = useState<PoloModel | undefined>();
+  const fetchpoloSelecionado = async () => {
+    const polo = await fetchPolo(data.poloId);
+    setPoloSelecionado(polo);
   }
   useEffect(()=>{
-    fetchSuperintendenciaSelecionada();
+    fetchpoloSelecionado();
   }, []);
   
   const chamarSituacao = async () => {
@@ -212,7 +214,7 @@ const ModalCampos = ({
           </div>
         </div>
         
-        <label htmlFor="input-default">CEP Superintendência</label>
+        <label htmlFor="input-default">CEP Polo</label>
         <div className="input-group">
           <div className="input-icon">
             <i className="fas fa-thumbtack" aria-hidden="true"></i>
@@ -220,12 +222,12 @@ const ModalCampos = ({
           <input
               id="input-default"
               type="text"
-              placeholder={superintendenciaSelecionada?.cep}
+              placeholder={data.distanciaPolo ? poloSelecionado?.cep : '-'}
               disabled
           />
         </div>
 
-        <label htmlFor="input-default">Endereço Superintendência</label>
+        <label htmlFor="input-default">Endereço Polo</label>
         <div className="input-group">
           <div className="input-icon">
             <i className="fas fa-home" aria-hidden="true"></i>
@@ -233,7 +235,7 @@ const ModalCampos = ({
           <input
               id="input-default"
               type="text"
-              placeholder={superintendenciaSelecionada?.endereco}
+              placeholder={data.distanciaPolo ? poloSelecionado?.endereco : '-'}
               disabled
           />
         </div>
@@ -371,7 +373,7 @@ const ModalCampos = ({
           <input
               id="input-default"
               type="text"
-              placeholder={formataCustoLogistico(data.distanciaSuperintendencia)}
+              placeholder={data.distanciaPolo ? formataCustoLogistico(data.distanciaPolo) : '-'}
               disabled
           />
         </div>

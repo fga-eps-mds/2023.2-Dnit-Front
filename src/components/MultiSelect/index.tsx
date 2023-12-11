@@ -26,7 +26,7 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
     filtrarTodos, definePlaceholder, readOnly, errorMessage, required }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [novaLista, setNovaLista] = useState<MultiSelectOptions[]>([]);
-  const checkAll: boolean = items.length === value.length;
+  const checkAll: boolean = items.length === value.length && items.length > 0;
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

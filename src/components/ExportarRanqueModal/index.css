@@ -1,0 +1,8 @@
+.exportar-ranque-modal {
+    .br-modal-body {
+        overflow-x: hidden;
+    }
+    .br-modal{
+        --modal-medium: 1000px;
+    }
+}

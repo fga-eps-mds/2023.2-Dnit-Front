@@ -1,0 +1,44 @@
+.select-etapas .ant-select-selector {
+    background-color: #fff !important;
+  }
+  .select-etapas-cadastro .ant-select-selector {
+    background-color: var(--gray1) !important;
+    overflow-y: scroll;
+    height: 32px;
+  }
+  
+  .select-etapas-acao .ant-select-selector {
+    background-color: var(--gray1) !important;
+    overflow-y: scroll;
+    height: 32px;
+    width: 411.05px !important;
+  }
+  
+  .custom-modal {
+    --modal-size: var(--modal-large);
+    --modal-large: 80%;
+    --modal-auto: auto;
+    background: var(--background);
+    box-shadow: var(--surface-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    max-width: var(--modal-size);
+    max-height: 95%;
+    z-index: var(--z-index-layer-4);
+
+  }
+
+  .custom-button {
+    zoom: 80%;
+    width: 10em;
+    background-color: #1351b4;
+    margin-right: 10%;
+    margin-left: 10%;
+    margin-bottom: 20px;
+  }
+
+  .custom-input {
+    border: 1px solid var(--gray2);
+    border-radius: 2px;
+    background-color: var(--gray1);
+  }

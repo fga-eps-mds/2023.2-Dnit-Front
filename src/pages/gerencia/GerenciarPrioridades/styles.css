@@ -1,0 +1,22 @@
+.custo-logistico {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.custo-table {
+    margin: auto;
+}
+
+.custo-table input {
+    max-width: 60px;
+}
+
+.custo-table th, .custo-table td {
+    text-align: center !important;
+}
+
+@media (max-width: 716px) {
+    .custo-table {
+        margin: 0;
+    }
+}

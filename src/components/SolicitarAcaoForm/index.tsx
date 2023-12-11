@@ -4,7 +4,7 @@ import {
   EtapasDeEnsinoData,
   UnidadeFederativaData,
   MunicipioData,
-  SolicitacaoDeAcaoData,
+  SolicitacaoDeAcaoDTO,
 } from "../../models/service";
 import {
   fetchEtapasDeEnsino,
@@ -73,7 +73,7 @@ const SolicitacaoAcaoForm: React.FC = () => {
       } catch (error) {}
   };
 
-  const enviarSolicitacao = async (formData: SolicitacaoDeAcaoData) => {
+  const enviarSolicitacao = async (formData: SolicitacaoDeAcaoDTO) => {
     try {
       setBotaoEnviarDisponivel(false);
       await sendSolicitaAcao(formData);
@@ -107,8 +107,10 @@ const SolicitacaoAcaoForm: React.FC = () => {
   const onFinish = async (values: any) => {
     const formData = {
       Escola: JSON.parse(values.escola).nome,
-      UF: UFAtual && UFAtual.nome,
+      EscolaCodigoInep: JSON.parse(values.escola).cod,
+      Uf: UFAtual && UFAtual.id,
       Municipio: municipioAtual && municipioAtual.nome,
+      MunicipioId: municipioAtual && municipioAtual.id,
       NomeSolicitante: values.nome,
       VinculoEscola: values.vinculo,
       Email: values.email,
@@ -119,7 +121,7 @@ const SolicitacaoAcaoForm: React.FC = () => {
       QuantidadeAlunos: parseInt(values.quantidade),
       Observacoes: values.observacoes,
     };
-    enviarSolicitacao(formData as SolicitacaoDeAcaoData);
+    enviarSolicitacao(formData as SolicitacaoDeAcaoDTO);
   };
 
   const handleCustomSubmit = () => {

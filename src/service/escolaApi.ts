@@ -2,8 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import * as URL from "../consts/service"
 import * as DATA from "../models/service";
 import { ResponseStatus, sendCadastros, update, fetchDados } from "./apiUtils";
-import {Superintendencia} from "../models/service";
-
+import { ListaPaginada, SolicitacoesData } from "../models/solicitacoes";
 
 export async function fetchUnidadeFederativa(): Promise<DATA.UnidadeFederativaData[]> {
     return fetchDados<DATA.UnidadeFederativaData[]>(URL.unidadesFederativasURL);
@@ -20,10 +19,6 @@ export async function fetchMunicipio(UfId: number): Promise<DATA.MunicipioData[]
 
 export async function fetchSituacao(): Promise<DATA.SituacaoData[]> {
     return fetchDados<DATA.SituacaoData[]>(URL.situacaoURL);
-}
-
-export async function fetchSuperintendenciaData(id: any) {
-    return fetchDados<Superintendencia>(`${URL.listarSuperintendencia}/${id}`);
 }
 
 export async function sendCadastroEscolasPlanilha(data: FormData): Promise<any> {
@@ -77,14 +72,42 @@ export async function updateAlteraDadosEscola(data: DATA.AlterarDadosEscolaData)
     return update<DATA.AlterarDadosEscolaData>(URL.alterarDadosEscolaURL, data);
 }
 
-export async function sendSolicitaAcao(formData: DATA.SolicitacaoDeAcaoData): Promise<ResponseStatus> {
+export async function sendSolicitaAcao(formData: DATA.SolicitacaoDeAcaoDTO): Promise<ResponseStatus> {
     try {
         if (formData.Observacoes === undefined)
             formData.Observacoes = "*Nenhuma observação foi informada.*";
         const response: AxiosResponse<Response> = await axios.post(
             URL.solicitacaoDeAcaoURL,
-            { ...formData } as DATA.SolicitacaoDeAcaoData
+            { ...formData } as DATA.SolicitacaoDeAcaoDTO
         );
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function fetchSolicitacoesAcoes(
+    pagina: number,
+    tamanhoPagina: number,
+    nome: string,
+    uf: string = "",
+    idMunicipio: string = "",
+    quantidadeAlunosMin: number,
+    quantidadeAlunosMax: number
+): Promise<ListaPaginada<SolicitacoesData>> {
+    try {
+        const response: AxiosResponse<ListaPaginada<SolicitacoesData>> = await axios.get(URL.solicitacaoDeAcaoURL, {
+            params: {
+                pagina,
+                tamanhoPagina,
+                nome,
+                uf,
+                idMunicipio,
+                quantidadeAlunosMin,
+                quantidadeAlunosMax
+            }
+        });
         return response.data;
     } catch (error) {
         console.log(error);

@@ -154,8 +154,8 @@ export default function GerenciarUsuario() {
         <div className="d-flex justify-content-left align-items-center mr-5">
           <InputFilter onChange={setNome} dataTestId="filtroNome" label="Nome" placeholder="Nome"/>
           <InputFilter onChange={setEmpresa} dataTestId="empresaNome" label="Empresa" placeholder="Nome da Empresa"/>
-          <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUF} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           <Select items={listaPerfis} value={perfil} label={"Perfil:"} onChange={setPerfil} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+          <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUF} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           <Select items={listaMunicipios} value={municipio} label={"Municipios:"} onChange={setMunicipio} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
         </div>
         {listaUsuarios.length == 0 &&

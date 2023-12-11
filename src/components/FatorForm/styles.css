@@ -1,0 +1,16 @@
+.br-input.input-inline, .br-switch {
+    align-items: center;
+    margin-bottom: 10px;
+    width: 35vw;
+    margin-left: 0;
+}
+
+.br-input label {
+    margin-right: 10px;
+}
+
+.fator-form {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 60px;
+}

@@ -1,0 +1,48 @@
+.planning-info-container {
+    width: 100%;
+}
+
+.planning-info {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    position: relative;
+    margin-top: 3.125rem;
+    width: 100%;
+}
+
+.custom-divider {
+    width: 0.125rem;
+    background-color: #002E6E;
+    height: 100%;
+}
+
+.planning-text {
+    font-size: 1.7069rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 1.75rem;
+}
+ 
+.months-cards, .uf-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.uf-container {
+    margin-top: 1.75rem;
+}
+
+.table-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.875rem;
+}
+
+.title-text {
+    font-size: 1.375rem;
+    font-weight: 600;
+}

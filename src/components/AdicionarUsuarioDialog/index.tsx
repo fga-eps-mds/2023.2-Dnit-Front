@@ -81,7 +81,7 @@ export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog 
                 setSelectedItems(newSelectedItems);
                 setCurrentInputValue("");
                 setCurrentInputRotulo("");
-            }} inputValue={currentInputValue} inputReadOnly={false} dropdownStyle={{ marginLeft: "0px", width: "280px" }}
+            }} inputValue={currentInputValue} dropdownStyle={{ marginLeft: "0px", width: "280px" }}
             />
             <p className="usuarios-selecionados">Usuários selecionados:</p>
             <ul>

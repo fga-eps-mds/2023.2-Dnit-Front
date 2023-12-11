@@ -113,6 +113,10 @@ export async function sendCadastroUsuarioDnit(data: DATA.CadastroUsuarioData): P
     return sendCadastrosDnit<DATA.CadastroUsuarioData>(URL.cadastroUsuarioURL, data);
 }
 
+export async function sendCadastroUsuarioTerceiro(data: DATA.CadastroUsuarioTerceiroData): Promise<ResponseStatus> {
+    return sendCadastrosDnit<DATA.CadastroUsuarioTerceiroData>(URL.cadastroUsuarioTerceiroURL, data);
+}
+
 export async function updateRecuperarSenha(data: DATA.RecuperarSenhaData): Promise<ResponseStatus> {
     return update<DATA.RecuperarSenhaData>(URL.recuperarSenhaURL, data);
 }

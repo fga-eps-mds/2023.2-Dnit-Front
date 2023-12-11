@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { ButtonComponent } from "../../components/Button";
 import "./styles.css";
-import {EtapasDeEnsinoData, RanqueInfo} from '../../models/service';
+import { EtapasDeEnsinoData } from '../../models/service';
 import {
   fetchEtapasDeEnsino,
   fetchMunicipio,
@@ -11,16 +12,17 @@ import {
 import TrilhaDeNavegacao from '../../components/Navegacao';
 import ReactLoading from 'react-loading';
 import Table, { CustomTableRow } from '../../components/Table';
-import { fetchEscolasRanque, fetchProcessamentoRanque } from '../../service/ranqueApi';
-import { EscolaRanqueData, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData } from '../../models/ranque';
+import { fetchEscolaRanque, fetchEscolasRanque, fetchProcessamentoRanque } from '../../service/ranqueApi';
+import { EscolaRanqueData, EscolaRanqueDetalhes, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData } from '../../models/ranque';
 import { notification } from 'antd';
 import { FiltroNome } from '../../components/FiltroNome';
+import ModalExportarRanque from '../../components/ExportarRanqueModal';
 import Select, { SelectItem } from '../../components/Select';
 import ModalRanqueEscola from '../../components/EscolaRanqueModal';
 import { AuthContext } from '../../provider/Autenticacao';
 import { Permissao } from '../../models/auth';
 import { useNavigate } from 'react-router-dom';
-import { formataCustoLogistico } from '../../utils/utils';
+import { formatDate, formataCustoLogistico } from '../../utils/utils';
 
 
 function Ranque() {
@@ -31,20 +33,33 @@ function Ranque() {
   const [municipios, setMunicipios] = useState<SelectItem[]>([]);
   const [etapa, setEtapa] = useState<SelectItem | null>(null);
   const [etapas, setEtapas] = useState<SelectItem[]>([]);
+  const [escolaDetalhes, setEscolaDetalhes] = useState<EscolaRanqueDetalhes>()
 
   const [ultimoProcessamento, setUltimoProcessamento] = useState<RanqueProcessamentoData | null>(null);
 
   const paginas = [{ nome: "Logout", link: "/login" }];
   const [loading, setLoading] = useState(true);
   const [escolas, setEscolas] = useState<ListaPaginada<EscolaRanqueData> | null>(null);
-  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'Cidade polo mais próxima', 'Custo Logístico'];
+  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Polo mais próximo', 'Custo Logístico'];
 
-  const [paginacao, setPaginacao] = useState({pagina: 1, tamanhoPagina: 10,});
+  const [paginacao, setPaginacao] = useState({ pagina: 1, tamanhoPagina: 10, });
   const [notificationApi, notificationContextHandler] = notification.useNotification();
   const [escolaAtual, setEscolaAtual] = useState<EscolaRanqueData | null>();
 
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  const openExportModal = () => {
+    setShowExportModal(true);
+  };
+
+  const closeExportModal = () => {
+    setShowExportModal(false);
+  };
+
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
+
+  const podeExportarRanque = temPermissao(Permissao.RanqueExportar);
 
   useEffect(() => {
     if (!temPermissao(Permissao.RanqueVisualizar)) {
@@ -94,19 +109,31 @@ function Ranque() {
       })
       .finally(() => setLoading(false));
   }, [nome, uf, municipio, etapa, paginacao]);
-  
 
-    const formatEtapaEnsino = (etapaEnsino: EtapasDeEnsinoData[], max = 2) => {
-        if (!etapaEnsino) {
-            return '';
+  const showEscolaInMap = (id: string) => {
+    return fetchEscolaRanque(id)
+      .then(escolaDetalhes => {
+        let latitude = escolaDetalhes.latitude.replace(',', '.');
+        let longitude = escolaDetalhes.longitude.replace(',', '.');
+
+        if (!latitude || !longitude) {
+          notificationApi.warning({ message: "Não foi possível encontrar essa localização" });
+          return;
         }
-        return `${etapaEnsino.map(etapa => etapa.descricao).slice(0, max).join(', ')}${etapaEnsino.length > max ? '...' : ''}`;
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+        window.open(googleMapsUrl, '_blank');
+      })
+      .catch(error => {
+        console.error("Erro ao obter detalhes da escola", error);
+        notificationApi.error({ message: "Não foi possível encontrar essa localização" });
+      })
+  }
+
+  const formatEtapaEnsino = (etapaEnsino: EtapasDeEnsinoData[], max = 2) => {
+    if (!etapaEnsino) {
+      return '';
     }
-    
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const padZeros = (n: number) => n.toString().padStart(2, '0');
-    return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
+    return `${etapaEnsino.map(etapa => etapa.descricao).slice(0, max).join(', ')}${etapaEnsino.length > max ? '...' : ''}`;
   }
 
   return (
@@ -120,9 +147,9 @@ function Ranque() {
         <div className='d-flex justify-content-between align-items-center'>
           <div className='d-flex align-items-center'>
             <FiltroNome nome={nome} onNomeChange={setNome} />
-            <Select items={ufs} value={uf?.id || ''} label={"UF:"} onChange={id => setUf(ufs.find(u => u.id == id) || null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
-            <Select items={municipios} value={municipio?.id || ''} label={"Municípios:"} onChange={id => setMunicipio(municipios.find(m => m.id == id) || null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
-            <Select items={etapas} value={etapa?.id || ''} label={"Etapas de Ensino:"} onChange={id => setEtapa(etapas.find(e => e.id == id) || null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+            <Select items={ufs} value={uf?.id ?? ''} label={"UF:"} onChange={id => setUf(ufs.find(u => u.id == id) ?? null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+            <Select items={municipios} value={municipio?.id ?? ''} label={"Municípios:"} onChange={id => setMunicipio(municipios.find(m => m.id == id) ?? null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+            <Select items={etapas} value={etapa?.id ?? ''} label={"Etapas de Ensino:"} onChange={id => setEtapa(etapas.find(e => e.id == id) ?? null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           </div>
           {
             ultimoProcessamento &&
@@ -166,20 +193,31 @@ function Ranque() {
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
                     '5': e.escola.municipio?.nome || '',
-                    '6': e.escola.superintendencia?.uf || '' ,
-                    '7': formataCustoLogistico(e.escola.distanciaSuperintendencia),
+                    '6': e.escola.distanciaPolo ? e.escola.polo?.uf.sigla : '-',
+                    '7': e.escola.distanciaPolo ? formataCustoLogistico(e.escola.distanciaPolo) : '-',
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}
+                  hideLocationIcon={!e.escola.distanciaPolo}
                   onDetailRow={_ => setEscolaAtual(e)}
+                  onLocationRow={_ => showEscolaInMap(e.escola.id)}
                 />
               )
             }
           </Table>
         }
 
-        {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
+        <div className='d-flex justify-content-end mt-4'>
+          <ButtonComponent label="Exportar Dados" buttonStyle="primary" onClick={openExportModal} disabled={!podeExportarRanque} />
         </div>
+
+        {showExportModal && (
+          <ModalExportarRanque onClose={closeExportModal} />
+        )}
+
+        {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
+      </div>
+
       <Footer />
     </div>
   );

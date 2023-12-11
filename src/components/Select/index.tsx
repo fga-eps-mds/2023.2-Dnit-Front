@@ -75,11 +75,11 @@ export default function Select({ inputValue, items, value, label, onChange, inpu
       <div className="br-input ">
         <label className="profile-type-label ml-2" htmlFor="select-simple" ><p style={{ marginBottom: "4px" }}><strong>{label}</strong></p></label>
         <div className="br-input large input-button">
-          {inputReadOnly && <input id="select-simple" type="text" placeholder={definePlaceholder} value={getRotuloById(value, novaLista)} readOnly style={inputStyle} />}
-          {!inputReadOnly && <input id="select-simple" data-testid="select-simple" type="text" placeholder={definePlaceholder} onFocus={toggleDropdown} onChange={e => onChange("", e.target.value)} value={inputValue} style={inputStyle} readOnly={inputReadOnly} />}
-          <button data-testid={`${label}customSelect`} className="br-button" type="button" aria-label="Exibir lista" tabIndex={-1} data-trigger="data-trigger" onClick={toggleDropdown} style={buttonStyle}>
+          {inputReadOnly && <input id="select-simple" data-testid="select-simple" type="text" placeholder={definePlaceholder} value={getRotuloById(value, novaLista)} readOnly={inputReadOnly} style={inputStyle} />}
+          {!inputReadOnly && <input id="select-simple" data-testid="select-simple" type="text" placeholder={definePlaceholder} onChange={e => onChange("", e.target.value)} value={getRotuloById(value, novaLista)} style={inputStyle} readOnly={!inputReadOnly} />}
+          {inputReadOnly && <button data-testid={`${label}customSelect`} className="br-button" type="button" aria-label="Exibir lista" tabIndex={-1} data-trigger="data-trigger" onClick={toggleDropdown} style={buttonStyle}>
             <i className="fas fa-angle-down" aria-hidden="true"></i>
-          </button>
+          </button>}
         </div>
       </div>
       {isOpen &&

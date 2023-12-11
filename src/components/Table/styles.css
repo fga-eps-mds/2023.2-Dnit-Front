@@ -52,7 +52,14 @@
     justify-content: end;
     align-self: flex-end;
     color: #1351B4;
+  }
 
+  .icon-row-cost {
+    display: flex;
+    gap: 1.125rem;
+    justify-content: start;
+    align-self: flex-end;
+    color: #1351B4;
   }
 
   .select-div {

@@ -1,0 +1,54 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-inline: 3.3%;
+}
+
+.planejamento-form {
+    display: flex;
+    width: 100%;
+}
+
+.planejamento-input {
+    text-align: start;
+    flex: 1;
+}
+
+.planejamento-input-large {
+    text-align: start;
+    flex-grow: 1.3;
+}
+
+/* Centralizar conteúdo do campo de data */
+.planejamento-form input[type="date"] {
+    text-align: center;
+    padding: 0.4375rem;
+    box-sizing: border-box;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.planning-button {
+    margin-top: 3.125rem ;
+}
+
+.error {
+    color: red;
+}

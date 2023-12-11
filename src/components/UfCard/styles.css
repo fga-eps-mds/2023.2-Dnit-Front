@@ -1,0 +1,27 @@
+.uf-card {
+    width: 7.75rem;
+    height: 6rem;
+    background-color: #F1F1F1;
+    box-shadow: 0rem 0.25rem 0.25rem 0px rgba(0, 0, 0, 0.25);
+    border-radius: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9375rem;
+    padding: 0.875rem 1.0625rem 1.4375rem 1.0625rem;
+   
+}
+
+.uf-card-title {
+    font-size: 1.1931rem;
+    font-weight: 600;
+}
+
+.uf-card-info {
+    font-size: 0.931rem;
+    font-weight: 500;
+}
+
+.select-cards-group {
+    width: 100%;
+}
+

@@ -1,10 +1,31 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { atualizarTipoPerfil, atualizarTokenUrl, cadastrarPerfilUrl, excluiPerfil, listarEscolasRanque, listarPerfis, listarPermissoesCategoria, listarUsuarioPermissoes, listarUsuarios, municipioURL, obterPerfil, ranqueamentoProcessamento, unidadesFederativasURL, urlAPIEscolas, urlAPIUps } from "../../consts/service";
+import {
+    atualizarDescricaoRanque,
+    atualizarTipoPerfil,
+    atualizarTokenUrl,
+    cadastrarPerfilUrl,
+    excluiPerfil,
+    listarEscolasRanque,
+    listarRanques,
+    listarPerfis,
+    listarPermissoesCategoria,
+    listarUsuarioPermissoes,
+    listarUsuarios,
+    municipioURL,
+    obterPerfil,
+    ranqueamentoProcessamento,
+    unidadesFederativasURL,
+    urlAPIEscolas,
+    urlAPIUps
+} from "../../consts/service";
+import poloRequests from "./polo/API";
 import empresaRequests from "./empresa/API";
 import { Permissao, TipoPerfil } from "../../models/auth";
 import { usuarios } from "../stub/usuarioModelos";
 import { ranqueData } from "../stub/ranqueModelos";
+import { solicitacao, solicitacaoSemEscola } from "../stub/solicitacaoAcao";
+import priorizacaoRequests from "./priorizacao/API";
 
 const escolasService = urlAPIEscolas;
 const upsService = urlAPIUps;
@@ -306,6 +327,76 @@ const server = setupServer(
       );
     }
   ),
+  rest.get(
+    `${escolasService}/dominio/propriedades`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json([
+          {
+            id: 1,
+            rotulo: "Porte"
+          },
+          {
+            id: 2,
+            rotulo: "Situacao"
+          },
+          {
+            id: 3,
+            rotulo: "Municipio"
+          },
+          {
+            id: 4,
+            rotulo: "UF"
+          },
+          {
+            id: 5,
+            rotulo: "Localizacao"
+          },
+          {
+            id: 6,
+            rotulo: "TotalAlunos"
+          },
+          {
+            id: 7,
+            rotulo: "EtapaEnsino"
+          },
+          {
+            id: 8,
+            rotulo: "Rede"
+          }
+        ])
+      );
+    }
+  ),
+  rest.get(
+    `${escolasService}/dominio/propriedades`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json([
+          {
+            id: "Ate50",
+            descricao: "Até 50 matrículas de escolarização"
+          },
+          {
+            id: "Entre201e500",
+            descricao: "Entre 201 e 500 matrículas de escolarização"
+          },
+          {
+            id: "Entre501e1000",
+            "descricao": "Entre 501 e 1000 matrículas de escolarização"
+          },
+          {
+            id: "Entre51e200",
+            descricao: "Entre 51 e 200 matrículas de escolarização"
+          },
+          {
+            id: "Mais1000",
+            descricao: "Mais de 1000 matrículas de escolarização"
+          }
+        ])
+      );
+    }
+  ),
   rest.delete(
     `${escolasService}/escolas/excluir`,
     (req, res, ctx) => {
@@ -471,8 +562,8 @@ const server = setupServer(
         logradouro: "SHA Conjunto Chácara",
         complemento: "",
         bairro: "Setor Habitacional Arniqueira (Águas Claras)",
-        localidade: "Acrelândia",
-        uf: "AC",
+        localidade: "Brasília",
+        uf: "DF",
         ibge: "5300108",
         gia: "",
         ddd: "61",
@@ -800,7 +891,9 @@ const server = setupServer(
       "items": usuarios
     }
   ))),
+  ...poloRequests,
   ...empresaRequests,
+  ...priorizacaoRequests,
   rest.get(listarEscolasRanque, (_, res, ctx) => res(
     ctx.status(200),
     ctx.json(ranqueData)
@@ -897,7 +990,192 @@ const server = setupServer(
         descricao: 'etapa 2'
       }
     ],
-  })))
+    temSolicitacao: true,
+  }))),
+
+  rest.delete(`${urlAPIEscolas}/planejamento/1`, (req, res, ctx) => res(ctx.status(200), ctx.json(
+        {
+            id: "1"
+        }
+    ))),
+
+  rest.delete(`${urlAPIEscolas}/planejamento/2`, (req, res, ctx) => res(ctx.status(400), ctx.json(
+        {
+            id: "2"
+        }
+    ))),
+    
+  rest.get(`${listarEscolasRanque}/id-4`, (_, res, ctx) => res(ctx.json({
+    ranqueInfo: {
+      ranqueId: 1,
+      pontuacao: 1000,
+      posicao: 1,
+      fatores: [
+        {
+          nome: "UPS",
+          peso: 1,
+          valor: 1454
+        }
+      ],
+    },
+    id: '1',
+    codigo: '123',
+    nome: 'escola teste',
+    cep: '72844654',
+    endereco: 'endereco',
+    longitude: '9,0893',
+    latitude: '-15,0987',
+    totalDocentes: 10,
+    totalAlunos: 10,
+    telefone: '40028922',
+    uf: {
+      id: 1,
+      sigla: 'DF',
+      nome: 'Distrito Federal'
+    },
+    municipio: {
+      id: 1,
+      nome: 'municipio'
+    },
+    rede: {
+      id: 'Municipal',
+      nome: 'Municipal',
+    },
+    porte: {
+      id: 'Entre51e200',
+      descricao: 'Entre 51 e 200 matrículas de escolarização'
+    },
+    localizacao: {
+      id: 'Urbana',
+      descricao: 'Urbana'
+    },
+    situacao: {
+      id: 'Critica',
+      descricao: 'Critica',
+    },
+    etapasEnsino: [
+      {
+        id: '1',
+        descricao: 'etapa'
+      },
+      {
+        id: '2',
+        descricao: 'etapa 2'
+      }
+    ],
+    temSolicitacao: true,
+  }))),
+  rest.get(`${listarEscolasRanque}/id-3`,
+    (req, res, ctx) => res(ctx.status(400), ctx.body("erro"))),
+  rest.get(`${listarEscolasRanque}/2`, (_, res, ctx) => res(ctx.json({
+    ranqueInfo: {
+      ranqueId: 2,
+      pontuacao: 1000,
+      posicao: 2,
+      fatores: [
+        {
+          nome: "UPS",
+          peso: 1,
+          valor: 1454
+        }
+      ],
+    },
+    id: '2',
+    codigo: '123',
+    nome: 'escola teste',
+    cep: '72844654',
+    endereco: 'endereco',
+    longitude: '1.0',
+    latitude: '1.0',
+    totalDocentes: 10,
+    totalAlunos: 10,
+    telefone: '40028922',
+    uf: {
+      id: 1,
+      sigla: 'DF',
+      nome: 'Distrito Federal'
+    },
+    municipio: {
+      id: 1,
+      nome: 'municipio'
+    },
+    rede: {
+      id: 'Municipal',
+      nome: 'Municipal',
+    },
+    porte: {},
+    localizacao: {
+      id: 'Urbana',
+      descricao: 'Urbana'
+    },
+    situacao: {},
+    etapasEnsino: [],
+    temSolicitacao: false,
+  }))),
+  rest.post(
+    `${escolasService}/solicitacaoAcao`,
+    (req, res, ctx) => {
+      return res(ctx.status(200));
+    }
+  ),
+  rest.get(
+    `${escolasService}/solicitacaoAcao`,
+    (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json(
+        {
+          "pagina": 1,
+          "itemsPorPagina": 10,
+          "total": 2,
+          "totalPaginas": 1,
+          "items": [solicitacao, solicitacaoSemEscola]
+        }
+      ))
+    }
+  ),
+  rest.put(
+    `${atualizarDescricaoRanque}/1`,
+    (req, res, ctx) => res(ctx.status(200))
+  ),
+  rest.get(
+    listarRanques,
+    (req, res, ctx) => res(
+      ctx.status(200),
+      ctx.json({
+        "pagina": 1,
+        "itemsPorPagina": 10,
+        "total": 2,
+        "totalPaginas": 1,
+        "items": [
+            {
+                "id": 1,
+                "numEscolas": 7777,
+                "data": "2023-11-22T13:49:28.28035+00:00",
+                "descricao": null,
+                "fatores": [
+                    {
+                        "nome": "UPS",
+                        "peso": 1,
+                        "valor": 0
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "numEscolas": 8888,
+                "data": "2023-11-22T13:22:03.937386+00:00",
+                "descricao": "asasas",
+                "fatores": [
+                    {
+                        "nome": "UPS",
+                        "peso": 1,
+                        "valor": 0
+                    }
+                ]
+            },
+        ]
+    })
+    )
+  )
 );
 
 export default server;

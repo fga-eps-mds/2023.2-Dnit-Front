@@ -8,7 +8,7 @@ describe("Modal Component", () => {
       <Modal className="modal-container" closeModal={() => {}}>
         <div>Modal Content</div>
       </Modal>
-    );
+    ); 
 
     const modalOverlay = screen.getByTestId("overlay");
     expect(modalOverlay).toHaveClass("overlay modal-container");
@@ -51,7 +51,7 @@ describe("Modal Component", () => {
 
     const modalContent = getByTestId('overlay').firstChild; 
     if (modalContent) {
-      fireEvent.click(modalContent);
+      fireEvent.mouseDown(modalContent);
     }
     expect(closeModalMock).not.toHaveBeenCalled();
   });

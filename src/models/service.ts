@@ -1,4 +1,4 @@
-import { type } from "os";
+import { PlanejamentoMacro } from "./gerenciarAcoes";
 
 export interface UnidadeFederativaData {
   id: number;
@@ -36,6 +36,7 @@ export type SituacaoData = EnumData;
 export type EtapasDeEnsinoData = EnumData;
 export type LocalizacaoData = EnumData;
 export type RedeData = EnumData;
+export type Propriedade =EnumData;
 
 export interface LoginData {
   email: string;
@@ -49,6 +50,16 @@ export interface CadastroUsuarioData {
   senha: string;
   nome: string;
   ufLotacao: number;
+  municipioId: number;
+}
+
+export interface CadastroUsuarioTerceiroData {
+  email: string;
+  senha: string;
+  nome: string;
+  ufLotacao: number;
+  municipioId: number;
+  cnpj: string; 
 }
 
 export interface CadastroEscolaData {
@@ -116,8 +127,8 @@ export interface EscolaData {
   telefone: string;
   numeroTotalDeDocentes: number;
   observacao: string;
-  distanciaSuperintendencia: number;
-  superintendenciaId: number;
+  distanciaPolo: number;
+  poloId: number;
 }
 
 export interface FiltroEscolaData {
@@ -131,11 +142,29 @@ export interface FiltroEscolaData {
   };
 }
 
+export interface FiltroPoloData {
+    params: {
+        Pagina: number;
+        TamanhoPagina: number;
+        Nome: string;
+        Cep: string;
+        idUf: string | number;
+        idMunicipio: string | number;
+    };
+}
+
 export interface EscolasFiltradasResponse {
   escolas: EscolaData[];
   escolasPorPagina: number;
   totalEscolas: number;
   totalPaginas: number;
+}
+
+export interface PolosFiltradosResponse {
+    polos: PoloData[];
+    polosPorPagina: number;
+    totalPolos: number;
+    totalPaginas: number;
 }
 
 export interface AlterarDadosEscolaData {
@@ -160,10 +189,12 @@ export interface EscolaInepData {
   nome: string;
 }
 
-export interface SolicitacaoDeAcaoData {
+export interface SolicitacaoDeAcaoDTO {
   Escola: string;
-  UF: string;
-  Municipio: string;
+  EscolaCodigoInep: string;
+  Uf: number;
+  Municipio: string
+  MunicipioId: number;
   NomeSolicitante: string;
   VinculoEscola: string;
   Email: string;
@@ -204,16 +235,6 @@ export interface UfModel {
   nome: string;
 }
 
-export interface Superintendencia{
-  id: number;
-  endereco: string;
-  cep: string;
-  latitude: string;
-  longitude: string;
-  uf: number;
-  siglaUf: string;
-}
-
 export interface Fatores {
   nome: string;
   peso: number;
@@ -225,4 +246,69 @@ export interface RanqueInfo {
   pontuacao: number;
   posicao: number;
   fatores: Fatores[];
+}
+
+
+export interface CriarPlanejamentoRequest {
+  nome: string;
+  responsavel: string;
+  mesInicio: number;
+  mesFim: number;
+  anoInicio: string;
+  anoFim: string;
+  quantidadeAcoes: number;
+}
+
+export interface ExcluirPlanejamentoData {
+  id_planejamento: string;
+}
+
+export interface PesquisaPlanejamentoFiltro {
+  params: {
+    Pagina: number;
+    TamanhoPagina: number;
+    Nome?: string;
+    Periodo?: string;
+    Responsavel?: string;
+    QuantidadeAcoes?: number;
+  };
+}
+
+export interface PlanejamentoFiltrados {
+  pagina: number;
+  itemsPorPagina: number;
+  total: number;
+  totalPaginas: number;
+  items: PlanejamentoMacro[];
+}
+
+export interface AtualizarPlanejamento {
+  nome: string;
+  planejamentoMacroMensal: PlanejamentoMacroMesUpdate[];
+}
+
+export interface PlanejamentoMacroMesUpdate {
+    mes: number;
+    ano: string;
+    escolas: string[]
+}
+export interface PoloData {
+    id: number;
+    endereco: string;
+    cep: string;
+    latitude: string;
+    longitude: string;
+    nomeMunicipio: string;
+    nome: string;
+    uf: number;
+}
+
+export interface SalvarPoloData {
+  endereco: string;
+  cep: string;
+  latitude: string;
+  longitude: string;
+  municipioId: number;
+  nome: string;
+  idUf: number;
 }

@@ -1,0 +1,20 @@
+.edicao-polo {
+	display: block !important;
+}
+
+.edicao-polo-cod {
+	display: block !important;
+	margin: 5px 150px 5px 10px;
+	padding: 10px;
+}
+
+.br-modal-body .br-select {
+	display: block;
+	margin: 5px 10px;
+	padding: 10px;
+}
+
+.br-modal-body .br-select .br-input {
+	padding: 0px;
+	margin: 0px;
+}

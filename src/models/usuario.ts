@@ -1,4 +1,4 @@
-import { Permissao, PermissaoCategoria, PermissaoModel, TipoPerfil } from "./auth";
+import { Permissao } from "./auth";
 import { EmpresaModel } from "./empresa";
 import { PerfilModel } from "./perfil";
 import { MunicipioData } from "./service";

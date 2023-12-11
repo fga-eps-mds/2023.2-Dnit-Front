@@ -1,0 +1,52 @@
+.select-cards-group {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 3.25rem;
+    row-gap: 0.75rem;
+    justify-content: center;
+}
+
+.select-card {
+    background-color: rgba(19, 81, 180, .55);
+    padding: 1rem 0.5125rem;
+    border-radius: 1.2681rem;
+    width: fit-content;
+    box-shadow: 0rem 0.3381rem 0.3381rem 0rem rgba(0, 0, 0, 0.25);
+    margin-block: 15px;
+    min-width: 10.3125rem;
+}
+
+.selected {
+    background-color: rgb(19, 81, 180) !important;
+}
+
+.card-title {
+    font-size: 1.1981rem;
+    color: white;
+    font-weight: bold;
+}
+
+.card-title-sm {
+    font-size: 0.8856rem;
+    color: white;
+    font-weight: bold;
+}
+
+.card-info {
+    margin-top: 0.7375rem;
+    display: flex;
+    flex-direction: column;
+    margin-inline: 1.875rem;
+}
+
+.card-info-item {
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.card-info-item-sm {
+    color: white;
+    font-weight: 600;
+    font-size: 0.75rem;
+}

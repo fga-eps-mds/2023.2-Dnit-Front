@@ -27,6 +27,11 @@ export async function fetchEmpresas(pagina: number, tamanhoPagina: number, nome:
     }
 }
 
+export async function fetchListaEmpresas(): Promise<EmpresaModel[]> {
+    const url = `${URL.visualizarEmpresaUrl}/list`;
+    return fetchDados<EmpresaModel[]>(url);
+}
+
 export async function fetchEmpresa(cnpj: string): Promise<EmpresaModel> {
     const url = `${URL.visualizarEmpresaUrl}/${cnpj}`;
     return fetchDados<EmpresaModel>(url);

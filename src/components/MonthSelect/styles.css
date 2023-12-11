@@ -1,0 +1,32 @@
+.custom-select {
+    position: relative;
+  }
+  
+  .custom-select select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .custom-select select:focus {
+    outline: none;
+    border-color: #007bff; /* Cor do contorno ao receber foco */
+  }
+  
+  /* Estilos adicionais para melhorar a aparência (opcional) */
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  p {
+    margin-top: 10px;
+  }
+  

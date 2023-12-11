@@ -20,10 +20,11 @@ export const ranqueData = {
             id: 1,
             descricao: "Um municipio ai"
           },
+          distanciaPolo: 20,
         },
       },
       {
-        ranqueId: 1,
+        ranqueId: 2,
         pontuacao: 40,
         posicao: 1,
         escola: {
@@ -40,7 +41,7 @@ export const ranqueData = {
           },
         },
       },{
-        ranqueId: 1,
+        ranqueId: 3,
         pontuacao: 30,
         posicao: 1,
         escola: {
@@ -51,9 +52,11 @@ export const ranqueData = {
             id: 1,
             descricao: "Um municipio ai"
           },
+          distanciaPolo: 7000,
+
         },
       },{
-        ranqueId: 1,
+        ranqueId: 4,
         pontuacao: 20,
         posicao: 1,
         escola: {
@@ -68,6 +71,7 @@ export const ranqueData = {
             id: 1,
             descricao: "Um municipio ai"
           },
+          distanciaPolo: 50,
         },
       },
     ]

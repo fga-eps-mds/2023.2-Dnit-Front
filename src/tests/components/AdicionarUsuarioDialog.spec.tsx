@@ -53,6 +53,10 @@ describe("Testes para o componente AdicionarUsuarioDialog", () => {
             fireEvent.change(screen.getByTestId("select-simple"), { target: { value: "us" } });
         })
 
+        act(() => {
+            screen.getByTestId("Selecionar UsuárioscustomSelect").click();
+        })
+
         await waitFor(() => expect(screen.getByTestId("Selecionar Usuários0")).toBeInTheDocument);
 
         act(() => {
@@ -97,6 +101,10 @@ describe("Testes para o componente AdicionarUsuarioDialog", () => {
             fireEvent.change(screen.getByTestId("select-simple"), { target: { value: "us" } });
         })
 
+        act(() => {
+            screen.getByTestId("Selecionar UsuárioscustomSelect").click();
+        })
+        
         await waitFor(() => expect(screen.getByTestId("Selecionar Usuários0")).toBeInTheDocument);
 
         act(() => {

@@ -1,19 +1,29 @@
 import { Form, Input, Radio, Select, Space, notification } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { sendCadastroUsuarioDnit } from "../../../service/usuarioApi";
-import { fetchUnidadeFederativa } from "../../../service/escolaApi";
+import {
+  sendCadastroUsuarioDnit,
+  sendCadastroUsuarioTerceiro,
+} from "../../../service/usuarioApi";
+import {
+  fetchMunicipio,
+  fetchUnidadeFederativa,
+} from "../../../service/escolaApi";
 import "../../../styles/form.css";
 import { ButtonComponent } from "../../Button";
 import { ExcessoesApi } from "../../../service/excessoes";
-
+import { fetchListaEmpresas } from "../../../service/empresaApi";
+import { Autocomplete, TextField } from "@mui/material";
+import { EmpresaModel } from "../../../models/empresa";
+import { CadastroUsuarioTerceiroData } from "../../../models/service";
 
 const { Option } = Select;
 
-interface UfProps {
+interface SelectProps {
   value: number;
   label: string;
 }
+
 const CadastroUsuarioForm: React.FC = () => {
   const [form] = Form.useForm();
 
@@ -27,28 +37,49 @@ const CadastroUsuarioForm: React.FC = () => {
 
   const [ufVisiveis, setufVisiveis] = useState(false);
   const [empresasVisiveis, setEmpresasVisiveis] = useState(false);
-  const [uf, setUf] = useState<UfProps[]>();
-  const empresas = [{ label: "Instituto Essência do Saber", value: 0 }];
+  const [uf, setUf] = useState<SelectProps[]>();
+  const [ufSelected, setUfSelected] = useState<number>();
+  const [municipios, setMunicipios] = useState<SelectProps[]>();
+  const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(
+    null
+  );
+
+  let empresas = useRef<EmpresaModel[]>([]);
+
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
-    const cadastroUsuarioData = {
-      email: values.email,
-      senha: values.senha,
-      nome: values.nome,
-      ufLotacao: values.uf,
-    };
-
     try {
-      await sendCadastroUsuarioDnit(cadastroUsuarioData);
+      if (empresasVisiveis) {
+        var empresaSelected = empresas.current.find(
+          (element) => element.razaoSocial === empresaSelecionada
+        );
+        const cadastroUsuarioTerceiro: CadastroUsuarioTerceiroData = {
+          email: values.email,
+          senha: values.senha,
+          nome: values.nome,
+          ufLotacao: values.uf,
+          municipioId: values.municipio,
+          cnpj: empresaSelected?.cnpj ?? "",
+        };
+
+        await sendCadastroUsuarioTerceiro(cadastroUsuarioTerceiro);
+      } else {
+        const cadastroUsuarioData = {
+          email: values.email,
+          senha: values.senha,
+          nome: values.nome,
+          ufLotacao: values.uf,
+          municipioId: values.municipio,
+        };
+        await sendCadastroUsuarioDnit(cadastroUsuarioData);
+      }
       notification.success({ message: "Cadastro feito!" });
       navigate("/login");
     } catch (error) {
-      if(error instanceof ExcessoesApi){
+      if (error instanceof ExcessoesApi) {
         api.error({ message: error.message });
-      }
-      else
-        api.error({ message: "Erro interno" });
+      } else api.error({ message: "Erro interno" });
     }
   };
 
@@ -58,9 +89,25 @@ const CadastroUsuarioForm: React.FC = () => {
     setUf(novaUf);
   }
 
+  async function getMunicipios(): Promise<void> {
+    const municipios = await fetchMunicipio(ufSelected!);
+    const municipiosList = municipios.map((element) => ({
+      value: element.id,
+      label: element.nome,
+    }));
+    setMunicipios(municipiosList);
+  }
+
   const handleCustomSubmit = () => {
     form.submit();
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      empresas.current = await fetchListaEmpresas();
+    }
+    fetchData();
+  });
 
   return (
     <div className="formc">
@@ -105,6 +152,81 @@ const CadastroUsuarioForm: React.FC = () => {
             />
           </Form.Item>
 
+          <Form.Item
+            className="ext1 "
+            name="uf"
+            rules={regras}
+            label="UF de Lotação"
+          >
+            <Select
+              onClick={() => {
+                void fetchUf();
+              }}
+              onMouseDown={() => {
+                void fetchUf();
+              }}
+              notFoundContent={<p>Carregando...</p>}
+              placement="topLeft"
+              optionLabelProp="label"
+              placeholder={<i className="fas fa-city" />}
+              onSelect={(event) => setUfSelected(event)}
+            >
+              {uf?.map((u) => (
+                <Option
+                  data-testid={`option-${u.value}`}
+                  key={u.value}
+                  value={u.value}
+                  label={
+                    <>
+                      <i className="fas fa-city" />
+                      {u.label}
+                    </>
+                  }
+                >
+                  {u.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          {ufSelected !== undefined && (
+            <Form.Item
+              className="ext1 "
+              name="municipio"
+              rules={regras}
+              label="Município"
+            >
+              <Select
+                onClick={() => {
+                  void getMunicipios();
+                }}
+                onMouseDown={() => {
+                  void getMunicipios();
+                }}
+                notFoundContent={<p>Carregando...</p>}
+                placement="topLeft"
+                optionLabelProp="label"
+                placeholder={<i className="fas fa-city" />}
+              >
+                {municipios?.map((u) => (
+                  <Option
+                    data-testid={`option-municipio`}
+                    key={u.value}
+                    value={u.value}
+                    label={
+                      <>
+                        <i className="fas fa-city" />
+                        {u.label}
+                      </>
+                    }
+                  >
+                    {u.label}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
           <Form.Item name="senha" label="Senha" rules={regras}>
             <Input.Password
               className="inputForm"
@@ -145,7 +267,7 @@ const CadastroUsuarioForm: React.FC = () => {
                   setEmpresasVisiveis(false);
                 }}
               >
-                <p className="radio1">Usuário DNIT</p>
+                <span className="radio1">Usuário DNIT</span>
               </Radio>
               <Radio
                 value={"Terceirizada"}
@@ -155,77 +277,38 @@ const CadastroUsuarioForm: React.FC = () => {
                   setufVisiveis(false);
                 }}
               >
-                <p className="radio2">Empresa Executora</p>
+                <span className="radio2">Empresa Executora</span>
               </Radio>
             </Radio.Group>
           </Form.Item>
-
-          {ufVisiveis && (
-            <Form.Item
-              className="ext1 "
-              name="uf"
-              rules={regras}
-              label="UF de Lotação"
-            >
-              <Select
-                onClick={() => {
-                  void fetchUf();
-                }}
-                onMouseDown={() => {
-                  void fetchUf();
-                }}
-                notFoundContent={<p>Carregando...</p>}
-                placement="topLeft"
-                optionLabelProp="label"
-                placeholder={<i className="fas fa-city" />}
-              >
-                {uf?.map((u) => (
-                  <Option
-                    data-testid={`option-${u.value}`}
-                    key={u.value}
-                    value={u.value}
-                    label={
-                      <>
-                        <i className="fas fa-city" />
-                        {u.label}
-                      </>
-                    }
-                  >
-                    {u.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          )}
 
           {empresasVisiveis && (
             <div>
               <Form.Item
                 className="ext2"
-                name="empresa executora"
-                label="Empresa Executora"
+                name="empresa"
                 rules={regras}
+                label="Empresa Executora"
               >
-                <Select
-                  placement="topLeft"
-                  optionLabelProp="label"
-                  placeholder={<i className="fas fa-city" />}
-                >
-                  {empresas.map((empresa) => (
-                    <Option
-                      key={empresa.value}
-                      value={empresa.value}
-                      label={
-                        <>
-                          <i className="fas fa-city" />
-                          {empresa.label}
-                        </>
-                      }
-                    >
-                      {empresa.label}
-                    </Option>
-                  ))}
-                </Select>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box"
+                  data-testid="autocomplete"
+                  options={empresas.current.map((e) => e.razaoSocial)}
+                  value={empresaSelecionada}
+                  onChange={(event, newValue) =>
+                    setEmpresaSelecionada(newValue)
+                  }
+                  style={{ height: "50px" }}
+                  className="inputForm"
+                  renderInput={(params) => (
+                    <TextField
+                      data-testid="autocomplete-field"
+                      {...params}
+                      InputLabelProps={{ shrink: false }}
+                    />
+                  )}
+                />
               </Form.Item>
             </div>
           )}

@@ -11,13 +11,21 @@ import Register from "./pages/cadastro/CadastrarUsuario";
 import RegisterSchool from "./pages/cadastro/CadastrarEscola";
 import ResetPassword from "./pages/senha/Redefinir/";
 import SolicitacaoAcao from "./pages/SolicitacaoAcao/";
+import GerenciarSolicitacoes from "./pages/gerencia/GerenciarSolicitacoes";
 import GerenciarPerfis from "./pages/gerencia/GerenciarPerfis";
 import GerenciarUsuario from "./pages/gerencia/GerenciarUsuario";
 import GerenciarEmpresas from "./pages/gerencia/GerenciarEmpresas";
-import { AuthContext, configuraAutenticacaoAxios } from "./provider/Autenticacao";
+import GerenciarPolos from "./pages/gerencia/GerenciarPolos";
+import {
+  AuthContext,
+  configuraAutenticacaoAxios,
+} from "./provider/Autenticacao";
 import "./styles/App.css";
 import GerenciarUsuariosEmpresa from "./pages/gerencia/GerenciarUsuariosEmpresa";
 import Ranque from "./pages/Ranque";
+import GerenciarPrioridades from "./pages/gerencia/GerenciarPrioridades";
+import GerenciarAcoes from "./pages/gerencia/GerenciarAcoes/Home";
+import GerarPlanejamento from "./pages/gerencia/GerenciarAcoes/GerarPlanejamento";
 
 function App() {
   const { getAuth } = useContext(AuthContext);
@@ -34,11 +42,25 @@ function App() {
           <Route path="/cadastrarescola" element={<RegisterSchool />} />
           <Route path="/escolas-cadastradas" element={<EscolasCadastradas />} />
           <Route path="/cadastrarRodovias" element={<CadastrarRodovias />} />
+          <Route path="/solicitacoes" element={<GerenciarSolicitacoes />} />
           <Route path="/ranque" element={<Ranque />} />
-          <Route path="/gerenciarUsuario" element={<GerenciarUsuario />}/>
+          <Route path="/gerenciarUsuario" element={<GerenciarUsuario />} />
           <Route path="/gerenciarPerfis" element={<GerenciarPerfis />} />
-          <Route path="/gerenciarEmpresas" element={<GerenciarEmpresas/>}/>
-          <Route path="/gerenciarUsuariosEmpresa/:cnpj" element={<GerenciarUsuariosEmpresa/>}/>
+          <Route path="/gerenciarPolos" element={<GerenciarPolos />} />
+          <Route path="/gerenciarEmpresas" element={<GerenciarEmpresas />} />
+          <Route
+            path="/gerenciarPrioridades"
+            element={<GerenciarPrioridades />}
+          />
+          <Route
+            path="/gerenciarUsuariosEmpresa/:cnpj"
+            element={<GerenciarUsuariosEmpresa />}
+          />
+          <Route path="/gerenciarAcoes" element={<GerenciarAcoes />} />
+          <Route
+            path="/gerenciarAcoes/gerarPlanejamento/:id"
+            element={<GerarPlanejamento />}
+          />
         </>
       ) : (
         <>
